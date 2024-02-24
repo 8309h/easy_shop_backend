@@ -29,9 +29,9 @@ app.get("/alluserdata", (req, res) => {
 app.use("/users",userRouter)
 
 app.use("/products",productRouter)
-app
 
 
+app.use(authonticate)
 app.listen(process.env.port, async () => {
 
     try {
