@@ -28,6 +28,8 @@ app.get("/alluserdata", (req, res) => {
 });
 app.use("/users",userRouter)
 
+
+
 app.use("/products",productRouter)
 
 
