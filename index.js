@@ -28,7 +28,8 @@ app.get("/alluserdata", (req, res) => {
 });
 app.use("/users",userRouter)
 
-app.use("/products",authonticate, productRouter)
+app.use("/products",productRouter)
+app
 
 
 app.listen(process.env.port, async () => {
