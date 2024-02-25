@@ -1,6 +1,7 @@
 const express = require("express");
 const { UserModel } = require("../models/User.models");
 const { BlacklistTokenModel } = require("../models/Blacklist.models");
+const { authonticate } = require("./middlewares/authonticate.middlewares")
 
 
 const jwt = require("jsonwebtoken");
@@ -45,8 +46,8 @@ userRouter.post("/login", async (req, res) => {
     }
 });
 
-userRouter.put("/updateprofile", async (req, res) => {
-    const { userID, name, email, password, address } = req.body;
+userRouter.patch("/updateprofile", authonticate ,async (req, res) => {
+    const {name, email, password, address } = req.body;
     try {
         const user = await UserModel.findById(userID);
         if (!user) {
@@ -76,7 +77,7 @@ userRouter.post("/refresh-token", async (req, res) => {
 userRouter.post("/logout", async (req, res) => {
     const { token } = req.body;
     try {
-        const isTokenBlacklisted = await BlacklistTokenModel.exists({ token });
+        const isTokenBlacklisted = await BlacklistTokenModel.findOne({ token });
         if (isTokenBlacklisted) {
             return res.status(401).json({ "msg": "Token is already blacklisted" });
         }
