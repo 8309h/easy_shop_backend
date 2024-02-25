@@ -2,6 +2,7 @@ const express = require("express");
 const { UserModel } = require("../models/User.models");
 const { BlacklistTokenModel } = require("../models/Blacklist.models");
 
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -36,7 +37,8 @@ userRouter.post("/login", async (req, res) => {
             return res.status(401).json({ "msg": "Incorrect password" });
         }
         const token = jwt.sign({ userID: user._id }, 'masai', { expiresIn: '1h' });
-        res.json({ "msg": "Login successful", "token": token });
+        const refreshtoken = jwt.sign({ userID: user._id }, 'refreshmasai', { expiresIn: '1h' });
+        res.json({ "msg": "Login successful", "token": token,"refreshtoken":refreshtoken});
     } catch (err) {
         console.error(err);
         res.status(500).json({ "msg": "Something went wrong" });
