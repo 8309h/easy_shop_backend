@@ -37,7 +37,7 @@ userRouter.post("/login", async (req, res) => {
             return res.status(401).json({ "msg": "Incorrect password" });
         }
         const token = jwt.sign({ userID: user._id }, 'masai', { expiresIn: '1h' });
-        const refreshtoken = jwt.sign({ userID: user._id }, 'refreshmasai', { expiresIn: '1h' });
+        const refreshtoken = jwt.sign({ userID: user._id }, 'refreshmasai', { expiresIn: '7h' });
         res.json({ "msg": "Login successful", "token": token,"refreshtoken":refreshtoken});
     } catch (err) {
         console.error(err);
