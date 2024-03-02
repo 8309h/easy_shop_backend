@@ -47,7 +47,7 @@ userRouter.post("/login", async (req, res) => {
     }
 });
 
-userRouter.patch("/updateprofile", authenticate, async (req, res) => {
+userRouter.patch("/updateprofile", authonticate, async (req, res) => {
     const { userID,name, email, password,address } = req.body;
     try {
         // Find and update the user by their ID
