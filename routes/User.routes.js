@@ -1,7 +1,7 @@
 const express = require("express");
 const { UserModel } = require("../models/User.models");
 const { BlacklistTokenModel } = require("../models/Blacklist.models");
-const { authonticate } = require("./middlewares/authonticate.middlewares")
+const { authonticate } = require("../middlewares/authonticate.middlewares")
 
 
 const jwt = require("jsonwebtoken");
@@ -27,6 +27,7 @@ userRouter.post("/register", async (req, res) => {
 });
 
 userRouter.post("/login", async (req, res) => {
+    
     const { email, password } = req.body;
     try {
         const user = await UserModel.findOne({ email });
@@ -46,21 +47,29 @@ userRouter.post("/login", async (req, res) => {
     }
 });
 
-userRouter.patch("/updateprofile", authonticate ,async (req, res) => {
-    const {name, email, password, address } = req.body;
+userRouter.patch("/updateprofile", authenticate, async (req, res) => {
+    const { userID,name, email, password,address } = req.body;
     try {
-        const user = await UserModel.findById(userID);
-        if (!user) {
+        // Find and update the user by their ID
+        const updatedUser = await UserModel.findById(userID);
+
+        if (!updatedUser) {
             return res.status(404).json({ "msg": "User not found" });
         }
+
+        // If a new password is provided, hash it and update the user's password
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
-            user.password = hashedPassword;
+            updatedUser.password = hashedPassword;
         }
-        user.name = name || user.name;
-        user.email = email || user.email;
-        user.address = address || user.address;
-        await user.save();
+
+        // Update the user's name, email, and address
+        updatedUser.name = name || updatedUser.name;
+        updatedUser.email = email || updatedUser.email;
+        updatedUser.address = address || updatedUser.address;
+
+        await updatedUser.save(); // Save the updated user
+
         res.json({ "msg": "User profile updated successfully" });
     } catch (err) {
         console.error(err);
